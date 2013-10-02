@@ -1,0 +1,62 @@
+<html>
+	<head>
+	<title>Family Tree V3</title>
+	<script src="person.js"></script>
+	<script src="data.sample.js"></script>
+	<script>
+
+var byId = function(id){ return document.getElementById(id); };
+
+var main = function(){
+	// initilize canvas and get current person
+	var current = Person.init( byId("canvas") );
+	var data = [], select = byId("suggest");
+	// generate list of all people, sorted by name
+	Object.keys(Person.index).forEach(function(name){
+		data.push.apply(data,Person.index[name]);
+	});
+	data.sort(function(a,b){
+		if(a.name<b.name) return -1;
+		else if(a.name>b.name) return 1;
+	});
+	// for each person, add select option
+	data.forEach(function(item,i){
+		var opt = document.createElement("option");
+		opt.value = i;
+		opt.innerHTML = item.name;
+		select.appendChild(opt);
+	});
+	// events handlers for select node
+	var events = {
+		"keypress": function(event){
+			if([13,32].indexOf(event.charCode)===-1) return;
+			// prevent options list in case of enter/space keypress
+			var select = this.cloneNode(true);
+			for(var type in events)
+				select.addEventListener(type,events[type]);
+			this.parentNode.replaceChild(select,this);
+			select.value = this.value;
+			select.focus();
+		},
+		"change": function(event){ data[this.value].link(canvas); }
+	};
+	// select node initialization
+	for(var type in events)
+		select.addEventListener(type,events[type]);
+	select.value = data.indexOf(current);
+	select.focus();
+};
+
+	</script>
+	<style>
+		body { text-align: center; }
+		* { font-family: Ubuntu; }
+		p { margin-top: 50px; }
+	</style>
+	</head>
+	<body onload="main()">
+		<p><select id="suggest"></select></p>
+		<p><canvas id="canvas"></canvas></p>
+		<p><small>Created by: <b>Kaustubh Karkare</b></small></p>
+	</body>
+</html>
