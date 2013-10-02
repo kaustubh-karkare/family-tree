@@ -2,8 +2,16 @@
 	<head>
 	<title>Family Tree V3</title>
 	<script src="person.js"></script>
-	<script src="data.sample.js"></script>
+	<script src="data.js"></script>
 	<script>
+
+// load sample if actual data is unavailable
+if(Object.keys(Person.index).length==0){
+	var script = document.createElement('script');
+	script.type = "text/javascript";
+	script.src = "data.sample.js";
+	document.head.appendChild(script);
+}
 
 var byId = function(id){ return document.getElementById(id); };
 
